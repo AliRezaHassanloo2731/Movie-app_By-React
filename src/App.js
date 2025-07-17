@@ -1,8 +1,6 @@
-import {
-  Children,
-  useState,
-} from "react";
+import { useState } from "react";
 import logo from "./image/logo.png";
+import StarRating from "./StarRating";
 
 const tempMovieData = [
   {
@@ -129,6 +127,18 @@ export default function App() {
         <Box>
           <WatchedSummary
             watched={watched}
+          />
+          <StarRating
+            // maxRating={}
+            color="#bfb8a4"
+            size={2.8}
+            // messsages={[
+            //   "Terrible",
+            //   "Bad",
+            //   "Ok",
+            //   "Good",
+            //   "amazing",
+            // ]}
           />
           <WatchedMovieList
             watched={watched}

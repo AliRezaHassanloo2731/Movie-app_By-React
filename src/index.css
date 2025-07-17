@@ -74,7 +74,7 @@ body {
     --color-background-500
   );
   border-radius: 0.9rem;
-  overflow: scroll;
+  /* overflow: scroll; */
   position: relative;
 }
 
