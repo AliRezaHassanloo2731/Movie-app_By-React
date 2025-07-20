@@ -1,4 +1,7 @@
-import { useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
 import logo from "./image/logo.png";
 import StarRating from "./StarRating";
 
@@ -56,6 +59,103 @@ const average = (arr) =>
     0
   );
 
+const KEY = "15f06e9";
+export default function App() {
+  const [query, setQuery] =
+    useState("");
+  const [movies, setMovies] = useState(
+    []
+  );
+  const [watched, setWatched] =
+    useState([]);
+  const [isLoading, setIsLoading] =
+    useState(false);
+  const [err, setErr] = useState("");
+  const temQuery = "king";
+
+  useEffect(function () {
+    async function fetchMovie() {
+      try {
+        setIsLoading(true);
+
+        const res = await fetch(
+          `http://www.omdbapi.com/?apikey=${KEY}&s=${temQuery}`
+        );
+
+        if (!res.ok)
+          throw new Error(
+            "Something went wrong with fetching data"
+          );
+
+        const data = await res.json();
+        if (data.Response === "False")
+          throw new Error(
+            "Movie Not Found"
+          );
+
+        setMovies(data.Search);
+      } catch (error) {
+        setErr(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchMovie();
+  }, []);
+
+  return (
+    <>
+      <NavBar>
+        <Search />
+        <Numresults movies={movies} />
+      </NavBar>
+
+      <Main>
+        <Box>
+          {isLoading && <Loader />}
+          {!isLoading && !err && (
+            <MovieList
+              movies={movies}
+            />
+          )}
+          {err && (
+            <ErrorMessage
+              message={err}
+            />
+          )}
+        </Box>
+        <Box>
+          <WatchedSummary
+            watched={watched}
+          />
+          <StarRating
+            color="#bfb8a4"
+            size={2.8}
+          />
+          <WatchedMovieList
+            watched={watched}
+          />
+        </Box>
+      </Main>
+    </>
+  );
+}
+
+function Loader() {
+  return (
+    <p className="loader">Loading...</p>
+  );
+}
+
+function ErrorMessage({ message }) {
+  return (
+    <p className="error">
+      <span>⛔</span>
+      {message}
+    </p>
+  );
+}
+
 function NavBar({ children }) {
   const [query, setQuery] =
     useState("");
@@ -67,9 +167,7 @@ function NavBar({ children }) {
   );
 }
 
-function Search() {
-  const [query, setQuery] =
-    useState("");
+function Search({ query, setQuery }) {
   return (
     <input
       className="search"
@@ -104,48 +202,6 @@ function Numresults({ movies }) {
       <strong>{movies.length}</strong>{" "}
       results
     </p>
-  );
-}
-
-export default function App() {
-  const [movies, setMovies] = useState(
-    tempMovieData
-  );
-  const [watched, setWatched] =
-    useState(tempWatchedData);
-  return (
-    <>
-      <NavBar>
-        <Search />
-        <Numresults movies={movies} />
-      </NavBar>
-
-      <Main>
-        <Box>
-          <MovieList movies={movies} />
-        </Box>
-        <Box>
-          <WatchedSummary
-            watched={watched}
-          />
-          <StarRating
-            // maxRating={}
-            color="#bfb8a4"
-            size={2.8}
-            // messsages={[
-            //   "Terrible",
-            //   "Bad",
-            //   "Ok",
-            //   "Good",
-            //   "amazing",
-            // ]}
-          />
-          <WatchedMovieList
-            watched={watched}
-          />
-        </Box>
-      </Main>
-    </>
   );
 }
 
