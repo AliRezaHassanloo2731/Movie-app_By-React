@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { IoMdStarOutline } from "react-icons/io";
 import { FaStar } from "react-icons/fa";
+import PropTypes from "prop-types";
 
 const containertStyles = {
   display: "flex",
@@ -12,17 +13,32 @@ const starContainerStyle = {
   display: "flex",
   gap: "0.2rem",
 };
+StarRating.propTypes = {
+  maxRating: PropTypes.number,
+  defaultRating: PropTypes.number,
+  color: PropTypes.string,
+  size: PropTypes.number,
+  messages: PropTypes.array,
+  className: PropTypes.string,
+  onSetRating: PropTypes.func,
+};
 
 function StarRating({
   maxRating = 5,
   color = "#ffde36",
-  size = 24,
+  size = 2.4,
   messsages = [],
+  onSetRating,
 }) {
   const [rating, setRating] =
     useState(0);
   const [tempRating, setTempRating] =
     useState(0);
+
+  function handleRating(rating) {
+    setRating(rating);
+    onSetRating(rating);
+  }
 
   const textStyle = {
     lineHeight: "1",
@@ -43,7 +59,7 @@ function StarRating({
             size={size}
             key={num}
             onRate={() =>
-              setRating(num)
+              handleRating(num)
             }
             onHoverIN={() =>
               setTempRating(num)
