@@ -57,6 +57,26 @@ function MovieDetails({
 
   useEffect(
     function () {
+      function callback(e) {
+        if (e.code === "Escape")
+          onCloseMovie();
+      }
+      document.addEventListener(
+        "keydown",
+        callback
+      );
+      return function () {
+        document.removeEventListener(
+          "keydown",
+          callback
+        );
+      };
+    },
+    [onCloseMovie]
+  );
+
+  useEffect(
+    function () {
       async function showMovieDetail() {
         setIsLoading(true);
         const res = await fetch(
@@ -75,6 +95,9 @@ function MovieDetails({
     function () {
       if (!title) return;
       document.title = `movie |${title}`;
+
+      return () =>
+        (document.title = "Movie App");
     },
     [title]
   );
