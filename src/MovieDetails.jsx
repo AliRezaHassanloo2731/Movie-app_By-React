@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useRef,
   useState,
 } from "react";
 import StarRating from "./StarRating";
@@ -20,6 +21,12 @@ function MovieDetails({
     useState(false);
   const [userRating, setUserRating] =
     useState("");
+
+  const countRef = useRef(0);
+
+  useEffect(() => {
+    if (userRating) countRef.current++;
+  }, [userRating]);
 
   const isWatched = watched
     .map((movie) => movie.imdbID)
@@ -49,6 +56,8 @@ function MovieDetails({
         runtime.split(" ").at(0)
       ),
       userRating: Number(userRating),
+      countRatingDesition:
+        countRef.current,
     };
 
     onAddWatched(newWatchedMovie);
