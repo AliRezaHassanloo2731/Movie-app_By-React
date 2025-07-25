@@ -1,7 +1,4 @@
-import {
-  useEffect,
-  useState,
-} from "react";
+import { useState } from "react";
 import logo from "./image/logo.png";
 import WatchedMovieList from "./WatchedMovieList";
 import Loader from "./Loader";
@@ -22,7 +19,6 @@ const average = (arr) =>
       acc + cur / arr.length,
     0
   );
-// const KEY = "15f06e9";
 
 export default function App() {
   const [query, setQuery] =

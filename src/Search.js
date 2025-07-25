@@ -1,7 +1,4 @@
-import {
-  useEffect,
-  useRef,
-} from "react";
+import { useRef } from "react";
 import { useKey } from "./useKey";
 
 export function Search({
