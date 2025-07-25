@@ -13,6 +13,7 @@ import { Box } from "./Box";
 import { MovieList } from "./MovieList";
 import { Numresults } from "./Numresults";
 import Main from "./Main";
+import { useMovie } from "./useMovie";
 
 const average = (arr) =>
   arr.reduce(
@@ -20,14 +21,14 @@ const average = (arr) =>
       acc + cur / arr.length,
     0
   );
-const KEY = "15f06e9";
+// const KEY = "15f06e9";
 
 export default function App() {
   const [query, setQuery] =
     useState("");
-  const [movies, setMovies] = useState(
-    []
-  );
+  // const [movies, setMovies] = useState(
+  //   []
+  // );
   const [watched, setWatched] =
     useState(() => {
       return JSON.parse(
@@ -36,9 +37,9 @@ export default function App() {
     });
   // const [watched, setWatched] =
   //   useState([]);
-  const [isLoading, setIsLoading] =
-    useState(false);
-  const [err, setErr] = useState("");
+  // const [isLoading, setIsLoading] =
+  //   useState(false);
+  // const [err, setErr] = useState("");
   const [selectedId, setSelectedId] =
     useState(null);
 
@@ -67,6 +68,9 @@ export default function App() {
     );
   }
 
+  const { movies, isLoading, err } =
+    useMovie(query);
+
   useEffect(() => {
     localStorage.setItem(
       "watched",
@@ -74,56 +78,56 @@ export default function App() {
     );
   }, [watched]);
 
-  useEffect(
-    function () {
-      const controller =
-        new AbortController();
+  // useEffect(
+  //   function () {
+  //     const controller =
+  //       new AbortController();
 
-      async function fetchMovie() {
-        try {
-          setIsLoading(true);
-          setErr("");
+  //     async function fetchMovie() {
+  //       try {
+  //         setIsLoading(true);
+  //         setErr("");
 
-          const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
-            {
-              signal: controller.signal,
-            }
-          );
+  //         const res = await fetch(
+  //           `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+  //           {
+  //             signal: controller.signal,
+  //           }
+  //         );
 
-          if (!res.ok)
-            throw new Error(
-              "Something went wrong with fetching data"
-            );
+  //         if (!res.ok)
+  //           throw new Error(
+  //             "Something went wrong with fetching data"
+  //           );
 
-          const data = await res.json();
-          if (data.Response === "False")
-            throw new Error(
-              "Movie Not Found"
-            );
+  //         const data = await res.json();
+  //         if (data.Response === "False")
+  //           throw new Error(
+  //             "Movie Not Found"
+  //           );
 
-          setMovies(data.Search);
-          setErr("");
-        } catch (error) {
-          if (err.name !== "AbortError")
-            setErr(error.message);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-      if (query.length < 3) {
-        setErr("");
-        setMovies([]);
-        return;
-      }
+  //         setMovies(data.Search);
+  //         setErr("");
+  //       } catch (error) {
+  //         if (err.name !== "AbortError")
+  //           setErr(error.message);
+  //       } finally {
+  //         setIsLoading(false);
+  //       }
+  //     }
+  //     if (query.length < 3) {
+  //       setErr("");
+  //       setMovies([]);
+  //       return;
+  //     }
 
-      handleCloseMovie();
-      fetchMovie();
+  //     handleCloseMovie();
+  //     fetchMovie();
 
-      return () => controller.abort();
-    },
-    [query, err.name]
-  );
+  //     return () => controller.abort();
+  //   },
+  //   [query, err.name]
+  // );
 
   return (
     <>
