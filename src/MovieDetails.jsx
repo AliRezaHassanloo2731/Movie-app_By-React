@@ -5,6 +5,7 @@ import {
 } from "react";
 import StarRating from "./StarRating";
 import Loader from "./Loader";
+import { useKey } from "./useKey";
 
 const KEY = "15f06e9";
 
@@ -64,25 +65,7 @@ function MovieDetails({
     onCloseMovie();
   }
 
-  useEffect(
-    function () {
-      function callback(e) {
-        if (e.code === "Escape")
-          onCloseMovie();
-      }
-      document.addEventListener(
-        "keydown",
-        callback
-      );
-      return function () {
-        document.removeEventListener(
-          "keydown",
-          callback
-        );
-      };
-    },
-    [onCloseMovie]
-  );
+  useKey("Escape", onCloseMovie);
 
   useEffect(
     function () {
